@@ -3,9 +3,9 @@ from autobahn.asyncio.websocket import WebSocketServerProtocol, \
     WebSocketServerFactory
 
 import json
-import commands
+import WSServer.commands as commands
 from config import *
-from db import Db
+from .db import Db
 import logging
 import asyncio
 import threading

@@ -1,9 +1,5 @@
 from WSServer import server
 import traceback
-import sys
-import os
-
-sys.path.append(os.getcwd() + '/WSServer/')
 
 
 if __name__ == '__main__':

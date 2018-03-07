@@ -6,12 +6,12 @@
 import json
 import time
 
-import sessions
-from game.game import Game
-import game.actions
+import WSServer.sessions as sessions
+from .game.game import Game
+import WSServer.game.actions as actions
 from config import *
-from channel import Channel
-from server import Thread
+from .channel import Channel
+from .server import Thread
 
 
 def perms_check(user_rights):
@@ -290,7 +290,7 @@ def leave(self, _):
 @perms_check(1)
 def action(self, data):
     action_type = data['action_type'].replace('__', '')
-    resp = getattr(game.actions, action_type)(self, data)
+    resp = getattr(actions, action_type)(self, data)
     return {'type': 'action_%s_ok' % action_type, 'data': resp}
 
 

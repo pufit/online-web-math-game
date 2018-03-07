@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from config import *
-from channel import Channel
+from .channel import Channel
 import json
 
 
