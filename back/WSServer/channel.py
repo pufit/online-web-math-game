@@ -21,7 +21,7 @@ class Channel:
 
     def send(self, data, log=True):
         if log:
-            logger.info('%s Ответ %s  %s' % (self.name, data['type'], data['data']))
+            logger.info('%s Response %s  %s' % (self.name, data['type'], data['data']))
         for handler in self.handlers:
             try:
                 handler.ws_send(json.dumps(data))
@@ -35,7 +35,7 @@ class Channel:
         :param users: list or str
         :return: None
         """
-        logger.info('%s Ответ пользователям %s: %s  %s' % (self.name, users, data['type'], data['data']))
+        logger.info('%s Response for users %s: %s  %s' % (self.name, users, data['type'], data['data']))
         if type(users) == list:
             for handler in self.handlers:
                 if handler.user in users:
