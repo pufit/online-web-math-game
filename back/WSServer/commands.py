@@ -11,7 +11,6 @@ from .game.game import Game
 import WSServer.game.actions as actions
 from config import *
 from .channel import Channel
-from .server import Thread
 
 
 def perms_check(user_rights):
@@ -256,7 +255,6 @@ def start_game(self, _):
         raise Exception('You are not creator of this game')
     if len(self.game.players) == 1:
         raise Exception('You need one more player')
-    Thread(self.game.start_game)
     self.game.channel.send({'type': 'game_started', 'data': ''})
     return {'type': 'game', 'data': ''}
 
