@@ -22,7 +22,7 @@ class Handler(WebSocketServerProtocol):
         self.temp = db
         self.user = None
         self.user_id = None
-        self.user_stat = {}
+        self.user_stat = []
         self.game = None
         self.channel = self.temp.main_channel
         self.user_rights = 0
