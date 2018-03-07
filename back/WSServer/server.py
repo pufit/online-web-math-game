@@ -120,5 +120,7 @@ if __name__ == '__main__':
             out = eval(input())
             if out is not None:
                 print(out)
+        except SystemExit:
+            exit()
         except:
             traceback.print_exc()
