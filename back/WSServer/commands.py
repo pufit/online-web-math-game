@@ -112,6 +112,8 @@ def reg(self, data):
     }
 
     :raise: This login is already in use
+            Too small name
+            Bad password
 
     :return: __auth(self, data['user'], auth_type='reg_ok')
     """
