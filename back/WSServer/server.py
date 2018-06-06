@@ -59,21 +59,37 @@ class Handler(WebSocketServerProtocol):
     def onMessage(self, payload, is_binary):
         try:
             message = json.loads(payload.decode('utf-8'))
-            message_type = message['type']
-            data = message['data']
         except (UnicodeDecodeError, ValueError):
-            message_type = 'error'
-            data = 'Error'
-        try:
+            self.send(commands.error(None))
+            return
+        if message.get('type') and not (message.get('data') is None):
+            message_type = message['type']
             message_type = message_type.replace('__', '')
             message_type = message_type.lower()
-            self.logger.info('%s Request %s  %s' % (self.addr, message_type, data))
-            resp = getattr(commands, message_type)(self, data)
-        except Exception as ex:
-            resp = {'type': message_type + '_error', 'data': str(ex)}
-            self.logger.error('%s Error %s  %s' % (self.addr, message_type, str(ex)))
-        self.ws_send(json.dumps(resp))
-        self.logger.info('%s Response  %s  %s' % (self.addr, resp['type'], resp['data']))
+            data = message.get('data')
+            try:
+                resp = getattr(commands, message_type)(self, data)
+            except Exception as ex:
+                resp = {'type': message_type + '_error', 'data': str(ex)}
+                self.logger.error('%s Error %s %s %s' % (self.addr, message_type, data, str(ex)))
+                traceback.print_exc()
+        elif message.get('action'):
+            action = message['action']
+            action = action.replace('__', '')
+            action = action.lower()
+            data = message.get('data')
+            try:
+                resp = self.me.action(action, data)
+            except Exception as ex:
+                resp = {'type': action + '_error', 'data': str(ex)}
+                self.logger.error('%s Error %s %s %s' % (self.addr, action, data, str(ex)))
+                traceback.print_exc()
+        else:
+            resp = commands.error(None)
+        if message.get('id'):
+            resp['id'] = message['id']
+        if resp:
+            self.ws_send(json.dumps(resp))
 
     def onClose(self, *args):
         commands.leave(self, None)

@@ -196,21 +196,22 @@ def join(self, data):
     """
     :param self: class Handler
 
-    :type data: str
-    :param data: name of the game
+    :type data: dict
+    :param data: {'name': str}
 
     :raise: This game dose not exist
             Game already started
 
     :return: dict
     """
-    if not self.temp.games.get(data):
+    name = data['name']
+    if not self.temp.games.get(name):
         raise Exception('This game dose not exist')
-    if self.temp.games[data].started:
+    if self.temp.games[name].started:
         raise Exception('Game already started')
     if self.game:
         leave(self, None)
-    self.game = self.temp.games[data]
+    self.game = self.temp.games[name]
     self.me = self.game.add_new_player(self)
     resp = {
         'type': 'new_player_connected',
@@ -223,7 +224,7 @@ def join(self, data):
     self.game.channel.send(resp)
     self.temp.main_channel.send({
         'type': 'game_player_connected',
-        'data': data
+        'data': name
     })
     self.game.channel.join(self)
     resp = {
@@ -257,7 +258,7 @@ def start_game(self, _):
         raise Exception('You are not creator of this game')
     if len(self.game.players) == 1:
         raise Exception('You need one more player')
-    self.game.channel.send({'type': 'game_started', 'data': ''})
+    self.game.start()
     return {'type': 'game', 'data': ''}
 
 
