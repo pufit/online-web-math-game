@@ -56,6 +56,7 @@ class ExamplesFactory:
 
 class Game:
     max_players = 2
+    max_score = 15
 
     def __init__(self, channel, creator, config):
         self.config = config
@@ -86,6 +87,15 @@ class Game:
     def change_example(self):
         for player in self.players:
             player.answered = False
+
+            if player.score >= self.max_score:
+                self.channel.send(
+                    {
+                        'type': 'game_ended',
+                        'data': ''
+                    }
+                )
+                self.ended = True
 
         self.current_example = self.factory.generate()
         self.channel.send({'type': 'example', 'data': self.current_example})
